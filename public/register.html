@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALL Online - สมัครสมาชิก</title>
+    <link rel="stylesheet" href="css/register01.css">
+</head>
+<body>
+
+    <div class="image-01">
+        <img src="./ine/พนันงาน เซเว่น-Photoroom.jpg" alt="Login Illustration">
+    </div>
+
+    <div class="container fade-in">
+        <h1>สมัครสมาชิก</h1>
+        <form id="registerForm">
+
+            <br><div class="input-group">
+                <label>ชื่อผู้ใช้งาน:</label><br>
+                <br><input type="text" id="name" placeholder="Full Name" required> <br>
+            </div>
+
+            <br><div class="input-group">
+                <label>อีเมล:</label><br>
+                <br><input type="email" id="email" placeholder="Email" required> <br>
+            </div>
+
+            <br> <div class="input-group">
+                <label>รหัสผ่าน:</label><br>
+                <br><input type="password" id="password" placeholder="Password" required> <br>
+            </div>
+
+            <br><div class="input-group">
+                <label>ยืนยันรหัสผ่าน:</label><br>
+                <br><input type="password" id="confirmPassword" placeholder="Confirm Password" required> <br>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+        
+        <p id="message"></p>
+        <div class="link">
+            <p>มีบัญชีอยู่แล้ว? <a href="/login.html" id="loginLink">เข้าสู่ระบบที่นี่</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                document.getElementById('message').textContent = "Passwords do not match!";
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const result = await response.json();
+                document.getElementById('message').textContent = result.message;
+
+                if (result.success) {
+                    document.body.classList.add('fade-out');
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 500);
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+            }
+        });
+
+        document.getElementById('loginLink').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 500);
+        });
+    </script>
+</body>
+</html>

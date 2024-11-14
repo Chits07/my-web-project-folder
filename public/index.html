@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>หน้าหลัก</title>
+        <link rel="stylesheet" href="./css/styles01.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+    <body>       
+         <header>
+                <h1>ALL Online</h1>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
+                </div>
+                <ul>
+                    <a href="login.html">เข้าสู่ระบบ /</a>
+                    <a href="register.html">สมัครสมาชิก</a>
+                </ul>
+                <div class="cart-icon" onclick="toggleCart()">
+                    🛒
+                    <div class="cart-count" id="cartCount">0</div>
+                </div>
+            </header>
+        
+            <div class="image-slider">
+                <div class="slides">
+                    <div class="slide"><img src="./ine/1633x130-(1)-copy-251638-0.webp" alt="Image 1"></div>
+                    <div class="slide"><img src="https://www.allonline.7eleven.co.th/media/i/1663x130-(3)-copy-251704-0.webp" alt="Image 2"></div>
+                    <div class="slide"><img src="./ine/1633x130-(1)-copy-251638-0.webp" alt="Image 3"></div>
+                    <div class="slide"><img src="https://www.allonline.7eleven.co.th/media/i/1663x130-(3)-copy-251704-0.webp" alt="Image 4"></div>
+                    <div class="slide"><img src="./ine/1633x130-(1)-copy-251638-0.webp" alt="Image 5"></div>
+                    <div class="slide"><img src="https://www.allonline.7eleven.co.th/media/i/1663x130-(3)-copy-251704-0.webp" alt="Image 6"></div>
+                    <div class="slide"><img src="./ine/1633x130-(1)-copy-251638-0.webp" alt="Image 7"></div>
+                    <div class="slide"><img src="https://www.allonline.7eleven.co.th/media/i/1663x130-(3)-copy-251704-0.webp" alt="Image 8"></div>
+                </div>
+            </div>
+        
+            <ul class="category-menu">
+                <li><a href="Books02.html">หนังสือ นิตยสาร เครื่องเขียน</a></li>
+                <li><a href="mother02.html">แม่และเด็ก</a></li>
+                <li><a href="health02.html">สุขภาพ ออกกำลังกาย</a></li>
+                <li><a href="electrical02.html">เครื่องใช้ไฟฟ้า</a></li>
+                <li><a href="garden02.html">บ้านและสวน</a></li>
+                <li><a href="beauty02.html">ความงาม</a></li>
+                <li><a href="fashion02.html">แฟชั่น</a></li>
+                <li><a href="mobile02.html">มือถือ แกดเจ็ต</a></li>
+            </ul>
+        
+            <div id="product-container" class="product-container"></div>
+        
+            <div class="pagination">
+                <button onclick="changePage(-1)" id="prevBtn" disabled>Prev</button>
+                <span id="pageNumbers"></span>
+                <button onclick="changePage(1)" id="nextBtn">Next</button>
+        
+            <div id="cart" style="display: none;">
+                <h2>Cart Items</h2>
+                <div id="cartItems"></div>
+                <button onclick="toggleCart()">Close Cart</button>
+            </div>
+        
+            <script src="./js/script.js"></script>
+        
+            <script>
+        
+                let cartItems = {};
+        
+                fetch('http://localhost/api/products') 
+                    .then(response => response.json())
+                    .then(data => {
+                        const productContainer = document.getElementById('product-container');
+                        
+                        if (!data || data.length === 0) {
+                            productContainer.innerHTML = '<p>No products found.</p>';
+                            return;
+                        }
+        
+                        data.forEach(product => {
+                            const productDiv = document.createElement('div');
+                            productDiv.classList.add('product-item');
+                            
+                            const imageUrl = `/uploads/${product.product_image}`;
+                            productDiv.innerHTML = `
+                                <img src="${imageUrl}" alt="${product.product_name}" />
+                                <h3>${product.product_name}</h3>
+                                <p>Price: ${product.price} บาท</p>
+                                <button onclick="addToCart(${product.id}, '${product.product_name}', ${product.price})">Add to Cart</button>
+                            `;
+                            
+                            productContainer.appendChild(productDiv);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching products:', error);
+                    });
+        
+        
+        
+        function addToCart(productId, productName, productPrice) {
+            if (cartItems[productId]) {
+                cartItems[productId].quantity += 1; // หากสินค้าถูกเพิ่มไปแล้วในตะกร้า ก็เพิ่มจำนวนสินค้า
+            } else {
+                cartItems[productId] = { name: productName, price: productPrice, quantity: 1 }; // ถ้าไม่มีสินค้าในตะกร้า ก็เพิ่มสินค้าใหม่
+            }
+            updateCartCount(); // เรียกฟังก์ชันเพื่ออัปเดตจำนวนสินค้าทั้งหมดในตะกร้า
+        }
+        
+        
+              function updateCartCount() {
+            const totalItems = Object.values(cartItems).reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').innerText = totalItems; // อัปเดตจำนวนสินค้าในตะกร้าที่แสดง
+        }
+        
+        
+        
+        function toggleCart() {
+            const cart = document.getElementById('cart');
+            cart.style.display = (cart.style.display === 'none' || cart.style.display === '') ? 'block' : 'none'; // เปิด/ปิดการแสดงตะกร้า
+            renderCartItems(); // เรียกฟังก์ชัน renderCartItems เพื่อแสดงรายการสินค้าทั้งหมดในตะกร้า
+        }
+        
+        
+        function renderCartItems() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            cartItemsDiv.innerHTML = ''; // ล้างรายการสินค้าก่อน
+        
+            Object.values(cartItems).forEach(item => {
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${item.name}</strong> x ${item.quantity} - ฿${item.price * item.quantity}`; // แสดงชื่อสินค้า จำนวน และราคาทั้งหมด
+                cartItemsDiv.appendChild(div); // เพิ่มรายการสินค้าในตะกร้า
+            });
+        }
+        
+            </script>
+        </body>
+        </html>
+        

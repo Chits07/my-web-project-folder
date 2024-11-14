@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายละเอียดสินค้า</title>
+    <link rel="stylesheet" href="GTT.css">
+</head>
+<body>
+    <header>
+        <h1>รายละเอียดสินค้า</h1>
+        <div class="cart-container">
+            <button class="cart-button" id="view-cart">🛒 ตะกร้าสินค้า (0)</button>
+        </div>
+    </header>
+    <main>
+        <div class="product-detail-container">
+            <img src="https://media.allonline.7eleven.co.th/_46_/plist/393313-00-pack-potato-chip-lays-v6.jpg" alt="ชื่อสินค้า" class="product-image">
+            <div class="product-info">
+                <h2 class="product-title">ชื่อสินค้า</h2>
+                <p class="product-price">ราคา: $30.00 บาท</p>
+                <p class="product-description">คำอธิบายสินค้า: รายละเอียดของสินค้าจะถูกแสดงที่นี่.</p>
+                <div class="quantity-container">
+                    <label for="quantity">จำนวน:</label>
+                    <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="100">
+                </div>
+                <button class="add-to-cart">เพิ่มไปยังตะกร้า</button>
+                <button class="buy-now">ซื้อทันที</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ป๊อปอัพสำหรับตะกร้า -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal">&times;</span>
+            <h2>รายการสินค้าที่อยู่ในตะกร้า</h2>
+            <ul id="cart-items"></ul>
+            <p id="total-amount">ยอดรวม: 0 บาท</p>
+            <button id="remove-all">ยกเลิกทั้งหมด</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 ร้านค้าออนไลน์ของเรา</p>
+    </footer>
+
+    <script src="GTT.js"></script>
+</body>
+</html>
