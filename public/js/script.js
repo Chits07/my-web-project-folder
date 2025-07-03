@@ -10,7 +10,7 @@ const totalSlides = slides ? slides.children.length : 0;
 document.addEventListener('DOMContentLoaded', () => {
     // ตรวจสอบว่า .slides มีลูกอยู่จริงหรือไม่
     if (totalSlides > 0) {
-        setInterval(showNextSlide, 3000); // เริ่มสไลด์อัตโนมัติทุก 3 วินาที
+        setInterval(showNextSlide, 3000); 
     } else {
         console.log("No slides found!");
     }
